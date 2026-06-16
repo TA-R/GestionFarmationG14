@@ -2,7 +2,7 @@ function Header() {
   return (
     <header className="site-header">
       <div className="site-container site-header__inner">
-        <a className="site-header__brand" href="/">
+        <a className="site-header__brand" href="#home">
           <span className="site-header__logo" aria-hidden="true">
             GF
           </span>
@@ -10,7 +10,8 @@ function Header() {
         </a>
 
         <nav className="site-header__nav" aria-label="Navigation principale">
-          <a href="/">ADMIN</a>
+          <a href="#home">Accueil</a>
+          <a href="#admin">Admin</a>
         </nav>
       </div>
     </header>
