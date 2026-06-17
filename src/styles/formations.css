@@ -74,7 +74,6 @@
 
 .formations-section {
   padding: 56px 8%;
-  height: 685px;
 }
 
 .formations-section__header {
@@ -204,6 +203,21 @@
   background: #ffffff;
   color: #516070;
   animation: formation-empty-in 320ms ease both;
+}
+
+.formations-state,
+.formations-error {
+  padding: 22px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #516070;
+}
+
+.formations-error {
+  border: 1px solid #fecaca;
+  background: #fff1f2;
+  color: #be123c;
+  font-weight: 700;
 }
 
 @keyframes formation-card-in {

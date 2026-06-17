@@ -1,15 +1,23 @@
 import { useState } from 'react'
 
 const initialFormState = {
-  title: '',
-  category: '',
-  level: 'Debutant',
-  duration: '',
-  places: '',
+  titre: '',
+  niveau: 'Debutant',
+  duree: '',
+  prix: '',
 }
 
-function FormationForm({ onAddFormation }) {
-  const [formData, setFormData] = useState(initialFormState)
+function FormationForm({ onSubmitFormation, selectedFormation, onCancelEdit, isSaving }) {
+  const [formData, setFormData] = useState(() =>
+    selectedFormation
+      ? {
+          titre: selectedFormation.titre,
+          niveau: selectedFormation.niveau,
+          duree: String(selectedFormation.duree),
+          prix: String(selectedFormation.prix),
+        }
+      : initialFormState,
+  )
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -19,33 +27,36 @@ function FormationForm({ onAddFormation }) {
     }))
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
 
-    onAddFormation({
+    const isSaved = await onSubmitFormation({
       ...formData,
-      id: Date.now(),
-      places: Number(formData.places),
-      status: 'Active',
+      duree: Number(formData.duree),
+      prix: Number(formData.prix),
     })
 
-    setFormData(initialFormState)
+    if (isSaved && !selectedFormation) {
+      setFormData(initialFormState)
+    }
   }
 
   return (
     <form className="admin-form" onSubmit={handleSubmit}>
       <div className="admin-form__header">
-        <p className="admin-eyebrow">Nouvelle formation</p>
-        <h2>Ajouter une formation</h2>
+        <p className="admin-eyebrow">
+          {selectedFormation ? 'Modifier formation' : 'Nouvelle formation'}
+        </p>
+        <h2>{selectedFormation ? 'Modifier la formation' : 'Ajouter une formation'}</h2>
       </div>
 
       <div className="admin-form__grid">
         <label>
           Titre
           <input
-            name="title"
+            name="titre"
             type="text"
-            value={formData.title}
+            value={formData.titre}
             onChange={handleChange}
             placeholder="Ex: Developpement Web"
             required
@@ -53,20 +64,8 @@ function FormationForm({ onAddFormation }) {
         </label>
 
         <label>
-          Categorie
-          <input
-            name="category"
-            type="text"
-            value={formData.category}
-            onChange={handleChange}
-            placeholder="Ex: Informatique"
-            required
-          />
-        </label>
-
-        <label>
           Niveau
-          <select name="level" value={formData.level} onChange={handleChange}>
+          <select name="niveau" value={formData.niveau} onChange={handleChange}>
             <option value="Debutant">Debutant</option>
             <option value="Intermediaire">Intermediaire</option>
             <option value="Avance">Avance</option>
@@ -77,32 +76,48 @@ function FormationForm({ onAddFormation }) {
         <label>
           Duree
           <input
-            name="duration"
-            type="text"
-            value={formData.duration}
+            name="duree"
+            type="number"
+            min="1"
+            value={formData.duree}
             onChange={handleChange}
-            placeholder="Ex: 6 semaines"
+            placeholder="Ex: 30"
             required
           />
         </label>
 
         <label>
-          Places
+          Prix
           <input
-            name="places"
+            name="prix"
             type="number"
-            min="1"
-            value={formData.places}
+            min="0"
+            step="0.01"
+            value={formData.prix}
             onChange={handleChange}
-            placeholder="24"
+            placeholder="1200"
             required
           />
         </label>
       </div>
 
-      <button className="admin-form__button" type="submit">
-        Ajouter
-      </button>
+      <div className="admin-form__actions">
+        <button className="admin-form__button" type="submit" disabled={isSaving}>
+          {isSaving ? 'Enregistrement...' : selectedFormation ? 'Modifier' : 'Ajouter'}
+        </button>
+        {selectedFormation && (
+          <button
+            className="admin-form__cancel"
+            type="button"
+            onClick={() => {
+              setFormData(initialFormState)
+              onCancelEdit()
+            }}
+          >
+            Annuler
+          </button>
+        )}
+      </div>
     </form>
   )
 }

@@ -144,8 +144,42 @@
   font-weight: 800;
 }
 
+.admin-form__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .admin-form__button:hover {
   background: #115e59;
+}
+
+.admin-form__actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.admin-form__actions .admin-form__button {
+  margin-top: 0;
+}
+
+.admin-form__cancel {
+  min-height: 44px;
+  border: 1px solid #cfd8e3;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #334155;
+  font-weight: 800;
+}
+
+.admin-error {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fff1f2;
+  color: #be123c;
+  font-weight: 700;
 }
 
 .admin-table {
