@@ -1,64 +1,30 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import FormationsList from '../components/formations/FormationsList'
 import FormationsSearch from '../components/formations/FormationsSearch'
+import { getFormations } from '../api/formationsApi'
 import '../styles/formations.css'
 
-const mockFormations = [
-  {
-    id: 1,
-    title: 'Developpement Web avec React',
-    category: 'Informatique',
-    level: 'Intermediaire',
-    duration: '6 semaines',
-    description:
-      'Apprenez a creer des interfaces modernes avec React, les composants, les props et la gestion d etat.',
-  },
-  {
-    id: 2,
-    title: 'Gestion de Projet Agile',
-    category: 'Management',
-    level: 'Debutant',
-    duration: '4 semaines',
-    description:
-      'Decouvrez les bases de Scrum, la planification agile et le suivi efficace des taches en equipe.',
-  },
-  {
-    id: 3,
-    title: 'Bases de Donnees SQL',
-    category: 'Base de donnees',
-    level: 'Debutant',
-    duration: '5 semaines',
-    description:
-      'Maitrisez les requetes SQL, la conception des tables et les relations entre les donnees.',
-  },
-  {
-    id: 4,
-    title: 'Communication Professionnelle',
-    category: 'Soft Skills',
-    level: 'Tous niveaux',
-    duration: '3 semaines',
-    description:
-      'Ameliorez votre communication orale, vos presentations et votre collaboration en milieu professionnel.',
-  },
-]
-
 function HomePage() {
+  const [formations, setFormations] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  const filteredFormations = useMemo(() => {
-    const normalizedSearch = searchTerm.trim().toLowerCase()
-
-    if (!normalizedSearch) {
-      return mockFormations
+  useEffect(() => {
+    const loadFormations = async () => {
+      try {
+        setIsLoading(true)
+        setError('')
+        const data = await getFormations(searchTerm)
+        setFormations(data)
+      } catch {
+        setError('Impossible de charger les formations depuis le serveur.')
+      } finally {
+        setIsLoading(false)
+      }
     }
 
-    return mockFormations.filter((formation) => {
-      return (
-        formation.title.toLowerCase().includes(normalizedSearch) ||
-        formation.category.toLowerCase().includes(normalizedSearch) ||
-        formation.level.toLowerCase().includes(normalizedSearch)
-      )
-    })
+    loadFormations()
   }, [searchTerm])
 
   return (
@@ -81,12 +47,12 @@ function HomePage() {
           aria-label="Resume des formations"
         >
           <div>
-            <strong>{mockFormations.length}</strong>
+            <strong>{formations.length}</strong>
             <span>Formations</span>
           </div>
           <div>
             <strong>4</strong>
-            <span>Domaines</span>
+            <span>Niveaux</span>
           </div>
           <div>
             <strong>100%</strong>
@@ -112,7 +78,9 @@ function HomePage() {
           onSearchChange={setSearchTerm}
         />
 
-        <FormationsList formations={filteredFormations} />
+        {isLoading && <p className="formations-state">Chargement...</p>}
+        {error && <p className="formations-error">{error}</p>}
+        {!isLoading && !error && <FormationsList formations={formations} />}
       </section>
     </main>
   )

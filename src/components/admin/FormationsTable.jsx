@@ -19,25 +19,19 @@ function FormationsTable({ formations, onDeleteFormation, onEditFormation }) {
           <thead>
             <tr>
               <th>Titre</th>
-              <th>Categorie</th>
               <th>Niveau</th>
               <th>Duree</th>
-              <th>Places</th>
-              <th>Statut</th>
+              <th>Prix</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {formations.map((formation) => (
               <tr key={formation.id}>
-                <td>{formation.title}</td>
-                <td>{formation.category}</td>
-                <td>{formation.level}</td>
-                <td>{formation.duration}</td>
-                <td>{formation.places}</td>
-                <td>
-                  <span className="admin-status">{formation.status}</span>
-                </td>
+                <td>{formation.titre}</td>
+                <td>{formation.niveau}</td>
+                <td>{formation.duree} heures</td>
+                <td>{Number(formation.prix).toFixed(2)} MRU</td>
                 <td>
                   <button
                     className="admin-table__edit"

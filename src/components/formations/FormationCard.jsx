@@ -2,16 +2,20 @@ function FormationCard({ formation }) {
   return (
     <article className="formation-card">
       <div className="formation-card__header">
-        <span className="formation-card__category">{formation.category}</span>
-        <span className="formation-card__level">{formation.level}</span>
+        <span className="formation-card__category">
+          {formation.duree} heures
+        </span>
+        <span className="formation-card__level">{formation.niveau}</span>
       </div>
 
-      <h3>{formation.title}</h3>
-      <p>{formation.description}</p>
+      <h3>{formation.titre}</h3>
+      <p>
+        Formation de niveau {formation.niveau.toLowerCase()} avec une duree de{' '}
+        {formation.duree} heures.
+      </p>
 
       <div className="formation-card__footer">
-        <span>{formation.duration}</span>
-        <button type="button">Voir details</button>
+        <span>{Number(formation.prix).toFixed(2)} MRU</span>
       </div>
     </article>
   )
